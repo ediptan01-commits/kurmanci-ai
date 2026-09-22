@@ -2,147 +2,46 @@
 <html lang="ku">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Kurmancî AI</title>
-
 <style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+*{box-sizing:border-box}body{margin:0;background:#0b0f14;color:white;font-family:Arial;height:100vh}
+header{height:65px;background:#111821;border-bottom:1px solid #293440;display:flex;align-items:center;padding:0 18px}
+.logo{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#7c3aed,#2563eb);display:grid;place-items:center;font-size:22px;font-weight:bold;margin-right:12px}
+h1{font-size:19px;margin:0}header p{font-size:12px;color:#9ca8b5;margin:3px 0}
+#chat{height:calc(100vh - 145px);overflow:auto;padding:20px 15px}
+.welcome{text-align:center;margin-top:60px}.welcome .logo{margin:auto;width:70px;height:70px;font-size:34px}
+.welcome h2{margin:18px 0 8px}.welcome p{color:#9ca8b5}
+.msg{display:flex;margin:0 0 16px}.user{justify-content:flex-end}
+.bubble{max-width:85%;padding:13px 16px;border-radius:18px;white-space:pre-wrap;line-height:1.5}
+.user .bubble{background:#2563eb;border-bottom-right-radius:5px}
+.ai .bubble{background:#171e27;border:1px solid #293440;border-bottom-left-radius:5px}
+#inputArea{position:fixed;bottom:0;left:0;right:0;background:#0b0f14;border-top:1px solid #293440;padding:10px}
+.box{display:flex;gap:8px;max-width:900px;margin:auto;background:#151d26;border:1px solid #303b48;border-radius:16px;padding:6px}
+input{flex:1;background:none;border:0;outline:0;color:white;font-size:16px;padding:10px}
+button{width:48px;border:0;border-radius:12px;background:#2563eb;color:white;font-size:20px}
+</style>
+</head>
+<body>
+<header><div class="logo">K</div><div><h1>Kurmancî AI</h1><p>Alîkarê te yê zîrek</p></div></header>
+<div id="chat">
+<div class="welcome" id="welcome"><div class="logo">K</div><h2>Silav!</h2><p>Tu dikarî pirsên xwe bi Kurmancî bipirsî.</p></div>
+</div>
+<div id="inputArea"><div class="box">
+<input id="input" placeholder="Peyama xwe binivîse..." autocomplete="off">
+<button id="send">➤</button>
+</div></div>
+<script>
+const API="https://kurmanci-ai.onrender.com/chat";
+const input=document.getElementById("input"),send=document.getElementById("send"),chat=document.getElementById("chat");
+function add(t,c){document.getElementById("welcome").style.display="none";let m=document.createElement("div");m.className="msg "+c;let b=document.createElement("div");b.className="bubble";b.textContent=t;m.appendChild(b);chat.appendChild(m);chat.scrollTop=chat.scrollHeight}
+async function go(){
+ let t=input.value.trim();if(!t)return;add(t,"user");input.value="";input.disabled=true;send.disabled=true;
+ try{let r=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:t})});let d=await r.json();if(!r.ok)throw Error();add(d.reply||"Bersiv nehat.","ai")}
+ catch(e){add("Bibore, pirsgirêkek çêbû. Ji kerema xwe dîsa biceribîne.","ai")}
+ input.disabled=false;send.disabled=false;input.focus()
 }
-
-body {
-    font-family: Arial, sans-serif;
-    background: #0b0f14;
-    color: white;
-    height: 100vh;
-    overflow: hidden;
-}
-
-.app {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-/* ÜST BAR */
-.header {
-    height: 70px;
-    background: #111821;
-    border-bottom: 1px solid #27313d;
-    display: flex;
-    align-items: center;
-    padding: 0 18px;
-}
-
-.logo {
-    width: 44px;
-    height: 44px;
-    border-radius: 14px;
-    background: linear-gradient(135deg, #7c3aed, #2563eb);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    font-weight: bold;
-    margin-right: 12px;
-}
-
-.title-area h1 {
-    font-size: 19px;
-}
-
-.title-area p {
-    font-size: 12px;
-    color: #9ca8b5;
-    margin-top: 3px;
-}
-
-/* SOHBET */
-.chat {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px 15px 120px;
-}
-
-.welcome {
-    text-align: center;
-    margin-top: 50px;
-}
-
-.welcome-icon {
-    width: 70px;
-    height: 70px;
-    border-radius: 22px;
-    margin: auto;
-    background: linear-gradient(135deg, #7c3aed, #2563eb);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 34px;
-    font-weight: bold;
-}
-
-.welcome h2 {
-    margin-top: 18px;
-    font-size: 25px;
-}
-
-.welcome p {
-    color: #9ca8b5;
-    margin-top: 8px;
-}
-
-.message {
-    display: flex;
-    margin-bottom: 18px;
-}
-
-.message.user {
-    justify-content: flex-end;
-}
-
-.bubble {
-    max-width: 85%;
-    padding: 13px 16px;
-    border-radius: 18px;
-    line-height: 1.5;
-    white-space: pre-wrap;
-}
-
-.user .bubble {
-    background: #2563eb;
-    border-bottom-right-radius: 5px;
-}
-
-.ai .bubble {
-    background: #171e27;
-    border: 1px solid #293440;
-    border-bottom-left-radius: 5px;
-}
-
-/* YAZIYOR */
-.typing {
-    display: none;
-    color: #8e9aa7;
-    font-size: 14px;
-    padding: 5px 10px 15px;
-}
-
-.typing span {
-    animation: blink 1.2s infinite;
-}
-
-@keyframes blink {
-    50% {
-        opacity: 0.3;
-    }
-}
-
-/* ALT GİRİŞ */
-.input-area {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right:
+send.onclick=go;input.onkeydown=e=>{if(e.key==="Enter")go()}
+</script>
+</body>
+</html>
