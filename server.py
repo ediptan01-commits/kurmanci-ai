@@ -61,9 +61,10 @@ def chat():
         })
 
     except Exception as e:
-        return jsonify({
-            "error": "Yapay zekâ yanıtı alınamadı."
-        }), 500
+    app.logger.exception("CHAT HATASI")
+    return jsonify({
+        "error": str(e)
+    }), 500
 
 
 if __name__ == "__main__":
