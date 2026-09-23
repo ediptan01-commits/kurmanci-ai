@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+bufrom flask import Flask, request, jsonify
 from flask_cors import CORS
 from openai import OpenAI
 import os
@@ -61,8 +61,8 @@ def chat():
         })
 
     except Exception as e:
-    app.logger.exception("CHAT HATASI")
-    return jsonify({
+        app.logger.exception("CHAT HATASI")
+        return jsonify({
         "error": str(e)
     }), 500
 
